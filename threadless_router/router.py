@@ -3,7 +3,7 @@ import datetime
 import inspect
 
 from rapidsms.conf import settings
-from rapidsms.router import Router as LegacyRouter
+from rapidsms.router.blocking.router import BlockingRouter as LegacyRouter
 from rapidsms.backends.base import BackendBase
 from rapidsms.apps.base import AppBase
 
