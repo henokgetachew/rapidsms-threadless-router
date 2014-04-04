@@ -1,12 +1,14 @@
 import copy
 import datetime
 import inspect
+import logging
 
 from rapidsms.conf import settings
 from rapidsms.router.blocking.router import BlockingRouter as LegacyRouter
 from rapidsms.backends.base import BackendBase
 from rapidsms.apps.base import AppBase
 
+logger = logging.getLogger(__name__)
 
 class Router(LegacyRouter):
     """ RapidSMS router with the threading and Queue parts removed """
@@ -18,7 +20,7 @@ class Router(LegacyRouter):
         self.start(apps, backends)
 
     def start(self, apps, backends):
-        self.info("starting router")
+        logger.info("starting router")
         for name in apps:
             try:
                 self.add_app(name)
@@ -28,14 +30,14 @@ class Router(LegacyRouter):
             parsed_conf = copy.copy(conf)
             engine = parsed_conf.pop('ENGINE')
             self.add_backend(name, engine, parsed_conf)
-        self.info('backends: {0}'.format(self.backends.keys()))
-        self.info('apps: {0}'.format(self.apps))
+        logger.info('backends: {0}'.format(self.backends.keys()))
+        logger.info('apps: {0}'.format(self.apps))
         self._start_all_apps()
         self._start_all_backends()
         self.running = True
 
     def stop(self, graceful=False):
-        self.info("stopping router")
+        logger.info("stopping router")
         self._stop_all_apps()
         self._stop_all_backends()
         self.running = False
